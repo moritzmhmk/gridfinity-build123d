@@ -1,0 +1,1 @@
+Grid = list[list[bool]]
