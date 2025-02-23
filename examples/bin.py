@@ -1,4 +1,5 @@
 import argparse
+from build123d import export_stl
 import gridfinity as gf
 
 if __name__ == "__main__":
@@ -16,10 +17,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--grid", type=parse_size, default=(1, 1),
                         help="Bin grid size in format WxH (e.g., 2x3)")
-    parser.add_argument("--height", type=float, default=3,
+    parser.add_argument("--height", type=int, default=3,
                         help="Bin height in units (i.e. 2 = 14 mm).")
     parser.add_argument("--div", type=parse_size, default=(1, 1),
                         help="Compartment division in format XxY (e.g., 2x2)")
+    parser.add_argument("--div-cutout", type=float, default=0,
+                        help="Size of cutout in dividing walls (default none)")
     parser.add_argument("--label", action="store_true")
     parser.add_argument("--scoop", action="store_true")
 
@@ -36,9 +39,21 @@ if __name__ == "__main__":
             height-7,
             div_x=args.div[0],
             div_y=args.div[1],
+            div_cutout=args.div_cutout,
             with_label=args.label,
             with_scoop=args.scoop
         ))
 
-    from ocp_vscode import show
-    show(bin)
+    export_stl(
+        bin,
+        "bin"
+        f"_{args.grid[0]}x{args.grid[1]}-h{args.height}"
+        f"-div{args.div[0]}x{args.div[1]}"
+        f"{'_cutout' if args.div_cutout else ''}"
+        f"{'-label' if args.label else ''}"
+        f"{'-scoop' if args.scoop else ''}"
+        ".stl"
+    )
+
+    # from ocp_vscode import show
+    # show(bin)

@@ -6,6 +6,7 @@ from build123d import (
     BuildPart,
     BuildSketch,
     Circle,
+    Edge,
     GridLocations,
     Locations,
     Mode,
@@ -26,6 +27,7 @@ class SubdividedCompartment(BasePartObject):
                  height: float,
                  div_x: int,
                  div_y: int,
+                 div_cutout: float = 0,
                  with_label=False,
                  with_scoop=False,
                  wall_thickness=1.0,
@@ -43,13 +45,38 @@ class SubdividedCompartment(BasePartObject):
 
             with BuildPart(mode=Mode.SUBTRACT) as p2:
                 _align = (Align.CENTER, Align.CENTER, Align.MAX)
+                cut_edges: list[Edge] = []
+                grid_w = size.X/div_x
+                grid_h = size.Y/div_y
                 if div_y > 1:
-                    with GridLocations(0, size.Y/div_y, 1, div_y-1):
-                        Box(size.X, 1, height, align=_align)
+                    with GridLocations(grid_w, grid_h, div_x, div_y-1):
+                        Box(grid_w, 1, height, align=_align)
+                        cut_size = min(div_cutout, grid_w-10)
+                        if cut_size > 0:
+                            cut = Box(
+                                length=cut_size,
+                                width=1,
+                                height=height-5,
+                                align=_align,
+                                mode=Mode.SUBTRACT
+                            )
+                            cut_edges += cut.edges().filter_by(Axis.Y)
                 if div_x > 1:
-                    with GridLocations(size.X/div_x, 0, div_x-1, 1):
-                        Box(1, size.Y, height, align=_align)
+                    with GridLocations(grid_w, grid_h, div_x-1, div_y):
+                        Box(1, grid_h, height, align=_align)
+                        cut_size = min(div_cutout, grid_h-10)
+                        if cut_size > 0:
+                            cut = Box(
+                                length=1,
+                                width=cut_size,
+                                height=height-5,
+                                align=_align,
+                                mode=Mode.SUBTRACT
+                            )
+                            cut_edges += cut.edges().filter_by(Axis.X)
 
+                if len(cut_edges):
+                    fillet(cut_edges, radius=2)
                 if div_x > 1 or div_y > 1:
                     _ez = p2.edges().group_by(Axis.Z)[-1]
                     _ef = [e for e in _ez if e.length > 1]
