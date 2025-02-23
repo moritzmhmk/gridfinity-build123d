@@ -46,7 +46,10 @@ class Bin(BasePartObject):
 
             # Body
             with Locations((0, 0, base_height)):
-                extrude(GridSketch(grid), amount=height - base_height)
+                extrude(
+                    GridSketch(grid, inset=0.25),
+                    amount=height - base_height
+                )
 
             if compartment is not None:
                 if isinstance(compartment, str):
@@ -106,7 +109,7 @@ class StackingLip(BasePartObject):
                  with_support=False,
                  mode=Mode.PRIVATE,
                  **kwargs):
-        grid_sketch = GridSketch(grid)
+        grid_sketch = GridSketch(grid, inset=0.25)
         d0, d1, d2 = 1.9, 1.8, 0.7  # lip dimensions
         d3, d4 = 1.2, d0 + d2  # support dimension
 
@@ -132,7 +135,7 @@ class StackingLip(BasePartObject):
 class GridSketch(BaseSketchObject):
     def __init__(self,
                  grid:  Grid,
-                 inset: float = 0.25,
+                 inset: float = 0,
                  with_fillet=True,
                  **kwargs):
         with BuildSketch(Plane.XY) as s:
