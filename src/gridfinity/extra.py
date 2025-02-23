@@ -17,23 +17,7 @@ from build123d import (
 )
 
 
-from .main import Grid, GridSketch, faces_xy
-
-
-class Compartment(BasePartObject):
-    def __init__(self,
-                 grid: Grid,
-                 height: float,
-                 wall_thickness=1.0,
-                 mode=Mode.PRIVATE,
-                 ** kwargs):
-        grid_sketch = GridSketch(grid, inset=0.25+wall_thickness)
-        with BuildPart() as p:
-            extrude(grid_sketch, amount=-height)
-            fillet(faces_xy(p)[0].edges(), radius=1)
-
-        assert p.part is not None
-        super().__init__(part=p.part, mode=mode, **kwargs)
+from .main import Grid, GridSketch
 
 
 class SubdividedCompartment(BasePartObject):
@@ -42,8 +26,8 @@ class SubdividedCompartment(BasePartObject):
                  height: float,
                  div_x: int,
                  div_y: int,
-                 with_label=True,
-                 with_scoop=True,
+                 with_label=False,
+                 with_scoop=False,
                  wall_thickness=1.0,
                  mode=Mode.PRIVATE,
                  **kwargs):

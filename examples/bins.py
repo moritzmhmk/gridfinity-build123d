@@ -1,39 +1,76 @@
 from ocp_vscode import show
-from gridfinity import Bin, compartments
+import gridfinity as gf
 
-# A simple 1x1 bin
+# A basic 1x1 bin
 grid_1x1 = [[True]]
-bin_1x1 = Bin(grid=grid_1x1, height=3*7)
+bin_1x1 = gf.Bin(grid=grid_1x1, height=3*7)
 show(bin_1x1)
 
-# A simple 1x1 bin without stacking lip
-grid_1x1 = [[True]]
-bin_1x1 = Bin(grid=grid_1x1, height=3*7, with_stacking_lip=False)
-show(bin_1x1)
+# A 1x1 bin without stacking lip
+bin_1x1_wo_lip = gf.Bin(grid=grid_1x1, height=3*7, stacking_lip=None)
+show(bin_1x1_wo_lip)
 
-#  A simple 2x3 bin
-grid_2x3 = [
-    [True, True],
-    [True, True],
-    [True, True]
-]
-bin_2x3 = Bin(grid=grid_2x3, height=3*7)
-show(bin_2x3)
+# A 1x1 bin without compartment (i.e. filled)
+bin_1x1_filled = gf.Bin(grid=grid_1x1, height=3*7, compartment=None)
+show(bin_1x1_filled)
 
-# A simple 2x3 bin with short grid notation
-bin_2x3_short = Bin(grid=[[True]*2] * 3, height=3*7)
-show(bin_2x3_short)
+# A 1x1 bin without stacking lip and compartment
+bin_1x1_filled_wo_lip = gf.Bin(grid=grid_1x1, height=3*7,
+                               stacking_lip=None, compartment=None)
+show(bin_1x1_filled_wo_lip)
 
-# A 3x3 bin with a whole in the middle
-grid_3x3_hole = [
+# A container with a compartment with thick walls
+bin_1x1_thick_walls = gf.Bin(
+    grid=grid_1x1,
+    height=3*7,
+    compartment=gf.Compartment(
+        grid_1x1,  # use same grid
+        2*7,  # height of bin minus 1 unit (i.e. 7 mm)
+        wall_thickness=2.6
+    )
+)
+show(bin_1x1_thick_walls)
+
+# A 1x1 bin with a subdivided compartment
+bin_1x1_div2x2 = gf.Bin(
+    grid=grid_1x1,
+    height=3*7,
+    compartment=gf.extra.SubdividedCompartment(
+        grid_1x1,  # use same grid
+        height=3*7-7,  # height of bin minus 1 unit (i.e. 7 mm)
+        div_x=1,
+        div_y=2
+    ))
+show(bin_1x1_div2x2)
+
+# A 1x1 bin with a subdivided compartment with scoop & label
+bin_1x1_div2x2_scoop_label = gf.Bin(
+    grid=grid_1x1,
+    height=3*7,
+    compartment=gf.extra.SubdividedCompartment(
+        grid_1x1,  # use same grid
+        height=3*7-7,  # usually height of bin minus 1 unit (i.e. 7 mm)
+        div_x=1,
+        div_y=2,
+        with_label=True,
+        with_scoop=True
+    ))
+show(bin_1x1_div2x2_scoop_label)
+
+
+# A simple 3x5 bin
+grid_3x5 = [
     [True, True, True],
-    [True, False, True],
+    [True, True, True],
+    [True, True, True],
+    [True, True, True],
     [True, True, True]
 ]
-bin_3x3_hole = Bin(grid=grid_3x3_hole, height=3*7)
-show(bin_3x3_hole)
+# alternative notation: grid_3x5 = [[True]*3] * 5
+bin_3x5 = gf.Bin(grid=grid_3x5, height=3*7)
+show(bin_3x5)
 
-# A "g" shaped bin
+# An irregularly shaped bin
 grid_g_shaped = [
     [True, True, True],
     [True, False, True],
@@ -41,66 +78,14 @@ grid_g_shaped = [
     [False, False, True],
     [True, True, True],
 ]
-bin_g_shaped = Bin(grid=grid_g_shaped, height=3*7)
+bin_g_shaped = gf.Bin(grid=grid_g_shaped, height=3*7)
 show(bin_g_shaped)
 
-
-# A container with a simple compartment
-bin_1x1_compartment = Bin(
-    grid=grid_1x1,
-    height=3*7,
-    cut_compartment=compartments.Compartment(
-        grid_1x1,  # same grid
-        2*7  # 1 unit (7 mm) smaller [maximum would be 2.3*7]
-    )
-)
-show(bin_1x1_compartment)
-
-# A container with a simple compartment and thick walls
-bin_1x1_compartment = Bin(
-    grid=grid_1x1,
-    height=3*7,
-    cut_compartment=compartments.Compartment(
-        grid_1x1,  # same grid
-        2*7,  # 1 unit (7 mm) smaller [maximum would be 2.3*7]
-        wall_thickness=2.6
-    )
-)
-show(bin_1x1_compartment)
-
-# A container with a subdivided compartment
-bin_1x1_compartment_div1x2 = Bin(
-    grid=grid_1x1,
-    height=3*7,
-    cut_compartment=compartments.SubdividedCompartment(
-        grid_1x1,  # same grid
-        2*7,  # 1 unit (7 mm) smaller [maximum would be 2.3*7]
-        div_x=1,
-        div_y=2
-    )
-)
-show(bin_1x1_compartment_div1x2)
-
-# A container with more subdivisions without scoop
-bin_1x1_compartment_div2x2 = Bin(
-    grid=grid_1x1,
-    height=3*7,
-    cut_compartment=compartments.SubdividedCompartment(
-        grid_1x1,  # same grid
-        2*7,  # 1 unit (7 mm) smaller [maximum would be 2.3*7]
-        div_x=2,
-        div_y=2,
-        with_scoop=False,
-        with_label=False
-    )
-)
-show(bin_1x1_compartment_div2x2)
-
-# Compartments in a "g" shaped container
-bin_g_shaped_compartment = Bin(
+# Compartments in an irregularly shaped container
+bin_g_shaped_compartment = gf.Bin(
     grid=grid_g_shaped,
     height=3*7,
-    cut_compartment=compartments.SubdividedCompartment(
+    compartment=gf.extra.SubdividedCompartment(
         grid_g_shaped,  # same grid
         2*7,  # 1 unit (7 mm) smaller [maximum would be 2.3*7]
         div_x=4,
