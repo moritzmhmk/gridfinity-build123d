@@ -84,7 +84,7 @@ class SubdividedCompartment(BasePartObject):
             z_edges = p.edges().filter_by(Axis.Z)
             btm_faces = p.faces().group_by(Axis.Z)[0]
             btm_edges = [e for btm_face in btm_faces for e in btm_face.edges()]
-            fillet(btm_edges + z_edges, radius=2)
+            fillet(btm_edges + z_edges, radius=4-0.25-wall_thickness)
 
         assert p.part is not None
         super().__init__(part=p.part, mode=mode, **kwargs)
