@@ -25,14 +25,15 @@ class Compartment(BasePartObject):
                  grid: Grid,
                  height: float,
                  wall_thickness=1.0,
-                 **kwargs):
+                 mode=Mode.PRIVATE,
+                 ** kwargs):
         grid_sketch = GridSketch(grid, inset=0.25+wall_thickness)
         with BuildPart() as p:
             extrude(grid_sketch, amount=-height)
             fillet(faces_xy(p)[0].edges(), radius=1)
 
         assert p.part is not None
-        super().__init__(part=p.part, **kwargs)
+        super().__init__(part=p.part, mode=mode, **kwargs)
 
 
 class SubdividedCompartment(BasePartObject):
@@ -44,6 +45,7 @@ class SubdividedCompartment(BasePartObject):
                  with_label=True,
                  with_scoop=True,
                  wall_thickness=1.0,
+                 mode=Mode.PRIVATE,
                  **kwargs):
         grid_sketch = GridSketch(
             grid,
@@ -101,4 +103,4 @@ class SubdividedCompartment(BasePartObject):
             fillet(btm_edges + z_edges, radius=2)
 
         assert p.part is not None
-        super().__init__(part=p.part, **kwargs)
+        super().__init__(part=p.part, mode=mode, **kwargs)
