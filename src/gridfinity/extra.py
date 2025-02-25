@@ -1,3 +1,4 @@
+from typing import Literal
 from build123d import (
     Align,
     Axis,
@@ -5,20 +6,20 @@ from build123d import (
     Box,
     BuildPart,
     BuildSketch,
-    Circle,
     Edge,
     GridLocations,
     Locations,
     Mode,
     Plane,
     Polygon,
-    Rectangle,
     extrude,
     fillet,
 )
 
 
 from .main import Grid, GridSketch
+
+Sides = Literal["front", "back", "left", "right"]
 
 
 class SubdividedCompartment(BasePartObject):
@@ -29,7 +30,7 @@ class SubdividedCompartment(BasePartObject):
                  div_y: int,
                  div_cutout: float = 0,
                  with_label=False,
-                 with_scoop=False,
+                 scoops: list[Sides] | None = None,
                  wall_thickness=1.0,
                  mode=Mode.PRIVATE,
                  **kwargs):
@@ -93,19 +94,24 @@ class SubdividedCompartment(BasePartObject):
                         fillet(s.vertices().sort_by(Axis.X)[0], radius=0.6)
                     extrude(amount=size.Y)
 
-                # Scoop Cutout
-                if with_scoop:
-                    # Shorten by lip_comp to compensate for the stacking lip
-                    _l_cmp = 1.8+0.8-wall_thickness
-                    with (BuildSketch(Plane.XZ.offset(-size.Y/2)),
-                          Locations((-size.X/2+_l_cmp, -height, 0))):
-                        Rectangle(_l_cmp, height, align=(Align.MAX, Align.MIN))
-                        # Create Scoop with radius r
-                        r = 7
-                        align = (Align.MIN, Align.MIN)
-                        Rectangle(r, r, align=align)
-                        Circle(r, align=align, mode=Mode.SUBTRACT)
-                    extrude(amount=size.Y)
+            wall_inset = -(1.8+0.8-wall_thickness)
+            sides = [] if scoops is None else set(scoops)
+            for side in sides:
+                axis = "x" if side == "front" or side == "back" else "y"
+                group_index = 0 if side == "back" or side == "right" else -1
+                face_filter = Plane.YZ if axis == "x" else Plane.XZ
+                edge_filter = Axis.Y if axis == "x" else Axis.X
+                group_axis = Axis.X if axis == "x" else Axis.Y
+                _fs = (p.faces()
+                       .filter_by(face_filter)
+                       .group_by(group_axis)[group_index])
+                for _f in _fs:
+                    extrude(_f, amount=wall_inset, mode=Mode.SUBTRACT)
+                _e = (p.edges()
+                      .filter_by(edge_filter)
+                      .group_by(Axis.Z)[0]
+                      .group_by(group_axis)[group_index])
+                fillet(_e, radius=7)
 
             # fillet all z edges and all of bottom faces
             z_edges = p.edges().filter_by(Axis.Z)

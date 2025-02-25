@@ -24,7 +24,10 @@ if __name__ == "__main__":
     parser.add_argument("--div-cutout", type=float, default=0,
                         help="Size of cutout in dividing walls (default none)")
     parser.add_argument("--label", action="store_true")
-    parser.add_argument("--scoop", action="store_true")
+    parser.add_argument("--scoops", nargs="*",
+                        choices=["front", "back", "left", "right"],
+                        help=("Specify which sides should have scoops. "
+                              "Options: front, back, left, right"))
 
     args = parser.parse_args()
 
@@ -41,9 +44,10 @@ if __name__ == "__main__":
             div_y=args.div[1],
             div_cutout=args.div_cutout,
             with_label=args.label,
-            with_scoop=args.scoop
+            scoops=args.scoops
         ))
 
+    scoop_str = "_".join(args.scoops) if args.scoops else None
     export_stl(
         bin,
         "bin"
@@ -51,7 +55,7 @@ if __name__ == "__main__":
         f"-div{args.div[0]}x{args.div[1]}"
         f"{'_cutout' if args.div_cutout else ''}"
         f"{'-label' if args.label else ''}"
-        f"{'-scoop' if args.scoop else ''}"
+        f"{f'-scoop_{scoop_str}' if scoop_str else ''}"
         ".stl"
     )
 

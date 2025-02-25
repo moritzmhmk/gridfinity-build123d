@@ -134,6 +134,11 @@ if __name__ == "__main__":
                         help="Bin height in units (i.e. 2 = 14 mm).")
     parser.add_argument("--div", type=parse_size, default=(1, 1),
                         help="Compartment division in format XxY (e.g., 2x2)")
+    parser.add_argument("--scoops", nargs="*",
+                        choices=["front", "back", "left", "right"],
+                        help=("Specify which sides should have scoops. "
+                              "Options: front, back, left, right"))
+
     args = parser.parse_args()
 
     lid_thickness = 0.6 + 0.1*2
@@ -149,7 +154,7 @@ if __name__ == "__main__":
                 div_x=args.div[0],
                 div_y=args.div[1],
                 with_label=False,
-                with_scoop=False
+                scoops=args.scoops
             ).moved(Location((0, 0, -lid_thickness)))
         )
 

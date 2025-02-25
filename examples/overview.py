@@ -53,7 +53,7 @@ bin_1x1_div2x2_scoop_label = gf.Bin(
         div_x=1,
         div_y=2,
         with_label=True,
-        with_scoop=True
+        scoops=["back"]
     ))
 show(bin_1x1_div2x2_scoop_label)
 
@@ -90,8 +90,8 @@ bin_g_shaped_compartment = gf.Bin(
         2*7,  # 1 unit (7 mm) smaller [maximum would be 2.3*7]
         div_x=4,
         div_y=4,
-        with_scoop=False,
-        with_label=False
+        scoops=["back"],
+        with_label=True
     )
 )
 show(bin_g_shaped_compartment)
