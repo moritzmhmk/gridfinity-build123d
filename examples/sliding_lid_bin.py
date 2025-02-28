@@ -161,11 +161,14 @@ if __name__ == "__main__":
         BinSubstraction(grid, bin_height=height, thickness=lid_thickness)
 
     assert bin.part is not None
+    scoop_str = "_".join(args.scoops) if args.scoops else None
     export_stl(
         bin.part,
         "sliding-lid-bin_"
         f"{args.grid[0]}x{args.grid[1]}-h{args.height}-"
-        f"div{args.div[0]}x{args.div[1]}.stl"
+        f"div{args.div[0]}x{args.div[1]}"
+        f"{f'-scoop_{scoop_str}' if scoop_str else ''}"
+        ".stl"
     )
 
     lid = Lid(grid, lid_thickness)
