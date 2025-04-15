@@ -1,26 +1,11 @@
-from build123d import (
-    Align,
-    Axis,
-    BasePartObject,
-    Box,
-    BuildPart,
-    BuildSketch,
-    Cylinder,
-    Kind,
-    Location,
-    Locations,
-    Mode,
-    Plane,
-    Rectangle,
-    add,
-    chamfer,
-    export_stl,
-    extrude,
-    offset
-)
+from build123d import (Align, Axis, BasePartObject, Box, BuildPart,
+                       BuildSketch, Cylinder, Kind, Location, Locations, Mode,
+                       Plane, Rectangle, add, chamfer, export_stl, extrude,
+                       offset)
+
 from gridfinity import Bin
-from gridfinity.main import GridSketch, StackingLip
 from gridfinity.extra import SubdividedCompartment
+from gridfinity.main import GridSketch, StackingLip
 from gridfinity.types import Grid
 
 
