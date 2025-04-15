@@ -1,5 +1,7 @@
 import argparse
+
 from build123d import export_stl
+
 import gridfinity as gf
 
 if __name__ == "__main__":
@@ -53,7 +55,7 @@ if __name__ == "__main__":
         "bin"
         f"_{args.grid[0]}x{args.grid[1]}-h{args.height}"
         f"-div{args.div[0]}x{args.div[1]}"
-        f"{'_cutout' if args.div_cutout else ''}"
+        f"{f'_cutout{args.div_cutout}' if args.div_cutout else ''}"
         f"{'-label' if args.label else ''}"
         f"{f'-scoop_{scoop_str}' if scoop_str else ''}"
         ".stl"
