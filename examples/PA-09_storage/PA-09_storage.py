@@ -1,7 +1,8 @@
 import os
 
-from build123d import (Align, Axis, Box, BuildPart, Face, Location, Locations,
-                       Mode, Plane, export_stl, extrude, fillet, import_svg)
+from build123d import (Align, Axis, Box, BuildPart, Cylinder, Face, Location,
+                       Locations, Mode, Plane, export_stl, extrude, fillet,
+                       import_svg)
 from ocp_vscode import show
 
 import gridfinity as gf
@@ -27,6 +28,11 @@ with BuildPart() as compartment:
             align=(Align.CENTER, Align.MIN, Align.MIN),
             mode=Mode.SUBTRACT
         )
+    with Locations((23, -6, 0), (-23, -6, 0)):
+        Cylinder(12.5, 14, align=(Align.CENTER, Align.CENTER, Align.MAX))
+    fillet(compartment.new_edges, 2)
+
+    fillet(compartment.edges().group_by(Axis.Z)[0:3], 1)
 
 with BuildPart() as bin:
     gf.Bin(grid=grid, height=height, compartment=compartment.part)
@@ -39,7 +45,7 @@ with BuildPart() as bin:
         .filter_by_position(Axis.X, -s_x/2, s_x/2)\
         .filter_by_position(Axis.Y, -s_y/2, s_y/2)
 
-    fillet(compartment_edges.filter_by(Plane.XY), 1)
+    fillet(compartment_edges.filter_by(Plane.XY).group_by(Axis.Z)[-1], 1)
 
 show(bin)
 export_stl(bin.part, "PA-09_storage.stl")
