@@ -13,8 +13,8 @@ with BuildPart(Plane.XZ) as ss03:
     align = (Align.CENTER, Align.CENTER, Align.MIN)
 
     sizes = [
-        (18.5, 18.5, 7.5),
-        (5.5, 5.5, 38),
+        (18.5, 18.5, 8),
+        (5.5, 5.5, 37),
         (20.5, 20.5, 88),
         (20.5, 9.5, 8),
         (9.5, 9.5, 16),
