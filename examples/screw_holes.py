@@ -1,17 +1,9 @@
 import argparse
-from build123d import (
-    Align,
-    BasePartObject,
-    BuildPart,
-    BuildSketch,
-    Circle,
-    Cylinder,
-    GridLocations,
-    Mode,
-    Rectangle,
-    export_stl,
-    extrude
-)
+
+from build123d import (Align, BasePartObject, BuildPart, BuildSketch, Circle,
+                       Cylinder, GridLocations, Mode, Rectangle, export_stl,
+                       extrude)
+
 import gridfinity as gf
 
 
