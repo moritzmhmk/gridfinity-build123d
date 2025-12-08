@@ -30,6 +30,7 @@ if __name__ == "__main__":
                         choices=["front", "back", "left", "right"],
                         help=("Specify which sides should have scoops. "
                               "Options: front, back, left, right"))
+    parser.add_argument("--preview", action="store_true")
 
     args = parser.parse_args()
 
@@ -49,6 +50,11 @@ if __name__ == "__main__":
             scoops=args.scoops
         ))
 
+    if args.preview:
+        from ocp_vscode import show
+        show(bin)
+        exit(0)
+
     scoop_str = "_".join(args.scoops) if args.scoops else None
     export_stl(
         bin,
@@ -60,6 +66,3 @@ if __name__ == "__main__":
         f"{f'-scoop_{scoop_str}' if scoop_str else ''}"
         ".stl"
     )
-
-    # from ocp_vscode import show
-    # show(bin)
