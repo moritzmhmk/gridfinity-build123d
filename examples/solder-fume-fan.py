@@ -51,6 +51,7 @@ with BuildPart() as compartment:
 
     with Locations((0, 0, -23)):
         # Self tap holes for M3
+        align = (Align.CENTER, Align.CENTER, Align.MAX)
         with GridLocations(32, 32, 2, 2):
             Cylinder(2.7/2, 14, align=align)
 
