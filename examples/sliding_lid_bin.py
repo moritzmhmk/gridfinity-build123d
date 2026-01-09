@@ -123,6 +123,7 @@ if __name__ == "__main__":
                         choices=["front", "back", "left", "right"],
                         help=("Specify which sides should have scoops. "
                               "Options: front, back, left, right"))
+    parser.add_argument("--preview", action="store_true")
 
     args = parser.parse_args()
 
@@ -145,7 +146,16 @@ if __name__ == "__main__":
 
         BinSubstraction(grid, bin_height=height, thickness=lid_thickness)
 
+    lid = Lid(grid, lid_thickness)
     assert bin.part is not None
+
+    if args.preview:
+        from ocp_vscode import show_object
+        bin_w, bin_d, _ = bin.part.bounding_box().size
+        show_object(bin.part)
+        show_object(lid.moved(Location((bin_w, 0, height))))
+        exit(0)
+
     scoop_str = "_".join(args.scoops) if args.scoops else None
     export_stl(
         bin.part,
@@ -156,11 +166,7 @@ if __name__ == "__main__":
         ".stl"
     )
 
-    lid = Lid(grid, lid_thickness)
     export_stl(
         lid,
         "sliding-lid-cover_"
         f"{args.grid[0]}x{args.grid[1]}.stl")
-
-    # from ocp_vscode import show
-    # show(bin.part, lid.moved(Location((0, 0, height))))
