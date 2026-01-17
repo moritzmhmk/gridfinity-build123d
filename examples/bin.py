@@ -23,7 +23,9 @@ if __name__ == "__main__":
                         help="Bin height in units (i.e. 2 = 14 mm).")
     parser.add_argument("--div", type=parse_size, default=(1, 1),
                         help="Compartment division in format XxY (e.g., 2x2)")
-    parser.add_argument("--div-cutout", type=float, default=0,
+    parser.add_argument("--div-cutout-width", type=float, default=0,
+                        help="Size of cutout in dividing walls (default none)")
+    parser.add_argument("--div-cutout-height", type=float, default=0,
                         help="Size of cutout in dividing walls (default none)")
     parser.add_argument("--label", action="store_true")
     parser.add_argument("--scoops", nargs="*",
@@ -45,7 +47,8 @@ if __name__ == "__main__":
             height-7,
             div_x=args.div[0],
             div_y=args.div[1],
-            div_cutout=args.div_cutout,
+            div_cutout_width=args.div_cutout_width,
+            div_cutout_height=args.div_cutout_height,
             with_label=args.label,
             scoops=args.scoops
         ))
@@ -55,14 +58,14 @@ if __name__ == "__main__":
         show(bin)
         exit(0)
 
-    scoop_str = "_".join(args.scoops) if args.scoops else None
+    scoop_str = "-".join(args.scoops) if args.scoops else None
     export_stl(
         bin,
         "bin"
         f"_{args.grid[0]}x{args.grid[1]}-h{args.height}"
-        f"-div{args.div[0]}x{args.div[1]}"
-        f"{f'_cutout{args.div_cutout}' if args.div_cutout else ''}"
-        f"{'-label' if args.label else ''}"
-        f"{f'-scoop_{scoop_str}' if scoop_str else ''}"
+        f"_div{args.div[0]}x{args.div[1]}"
+        f"{f'_cutout-w{args.div_cutout_width}-h{args.div_cutout_height}' if args.div_cutout_width else ''}"
+        f"{'_label' if args.label else ''}"
+        f"{f'_scoop-{scoop_str}' if scoop_str else ''}"
         ".stl"
     )

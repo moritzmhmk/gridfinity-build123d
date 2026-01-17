@@ -1,21 +1,8 @@
 from typing import Literal
-from build123d import (
-    Align,
-    Axis,
-    BasePartObject,
-    Box,
-    BuildPart,
-    BuildSketch,
-    Edge,
-    GridLocations,
-    Locations,
-    Mode,
-    Plane,
-    Polygon,
-    extrude,
-    fillet,
-)
 
+from build123d import (Align, Axis, BasePartObject, Box, BuildPart,
+                       BuildSketch, Edge, GridLocations, Locations, Mode,
+                       Plane, Polygon, extrude, fillet)
 
 from .main import Grid, GridSketch
 
@@ -28,7 +15,8 @@ class SubdividedCompartment(BasePartObject):
                  height: float,
                  div_x: int,
                  div_y: int,
-                 div_cutout: float = 0,
+                 div_cutout_width: float = 0,
+                 div_cutout_height: float = 0,
                  with_label=False,
                  scoops: list[Sides] | None = None,
                  wall_thickness=1.0,
@@ -52,12 +40,12 @@ class SubdividedCompartment(BasePartObject):
                 if div_y > 1:
                     with GridLocations(grid_w, grid_h, div_x, div_y-1):
                         Box(grid_w, 1, height, align=_align)
-                        cut_size = min(div_cutout, grid_w-10)
+                        cut_size = min(div_cutout_width, grid_w-10)
                         if cut_size > 0:
                             cut = Box(
                                 length=cut_size,
                                 width=1,
-                                height=height-5,
+                                height=div_cutout_height,
                                 align=_align,
                                 mode=Mode.SUBTRACT
                             )
@@ -65,12 +53,12 @@ class SubdividedCompartment(BasePartObject):
                 if div_x > 1:
                     with GridLocations(grid_w, grid_h, div_x-1, div_y):
                         Box(1, grid_h, height, align=_align)
-                        cut_size = min(div_cutout, grid_h-10)
+                        cut_size = min(div_cutout_width, grid_h-10)
                         if cut_size > 0:
                             cut = Box(
                                 length=1,
                                 width=cut_size,
-                                height=height-5,
+                                height=div_cutout_height,
                                 align=_align,
                                 mode=Mode.SUBTRACT
                             )
