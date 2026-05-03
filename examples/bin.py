@@ -73,6 +73,12 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument(
+        "--scoop-radius",
+        type=float,
+        default=7,
+        help="Radius of the scoop.",
+    )
+    parser.add_argument(
         "--preview",
         action="store_true",
     )
@@ -94,6 +100,7 @@ if __name__ == "__main__":
             div_cutout_height=args.div_cutout_height,
             with_label=args.label,
             scoops=args.scoops,
+            scoop_radius=args.scoop_radius,
         ),
     )
 

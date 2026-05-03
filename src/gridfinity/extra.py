@@ -33,6 +33,7 @@ class SubdividedCompartment(BasePartObject):
         div_cutout_height: float = 0,
         with_label=False,
         scoops: list[Sides] | None = None,
+        scoop_radius: float = 7.0,
         wall_thickness=1.0,
         mode=Mode.PRIVATE,
         **kwargs,
@@ -118,7 +119,7 @@ class SubdividedCompartment(BasePartObject):
                     .group_by(Axis.Z)[0]
                     .group_by(group_axis)[group_index]
                 )
-                fillet(_e, radius=7)
+                fillet(_e, radius=scoop_radius)
 
             # fillet all z edges and all of bottom faces
             z_edges = p.edges().filter_by(Axis.Z)
