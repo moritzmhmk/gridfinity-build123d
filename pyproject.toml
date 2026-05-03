@@ -4,6 +4,11 @@ version = "1.0.0"
 license = {text = "MIT"}
 dependencies = ["build123d==0.10.0"]
 
+[dependency-groups]
+dev = [
+    "ocp-vscode>=3.3.4",
+]
+
 [tool.ruff]
 line-length = 79
 
