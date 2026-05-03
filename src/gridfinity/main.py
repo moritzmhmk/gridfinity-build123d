@@ -1,4 +1,5 @@
 import typing
+
 from build123d import (
     Axis,
     BasePartObject,
@@ -20,24 +21,18 @@ from build123d import (
 )
 
 from .types import Grid
-from .utils import faces_xy, IrregularGridLocations
+from .utils import IrregularGridLocations, faces_xy
 
 
 class Bin(BasePartObject):
-    def __init__(self,
-                 grid: Grid,
-                 height: float,
-                 compartment: (
-                     typing.Literal["default"]
-                     | Part
-                     | None
-                 ) = "default",
-                 stacking_lip: (
-                     typing.Literal["default"] |
-                     Part |
-                     None
-                 ) = "default",
-                 **kwargs):
+    def __init__(
+        self,
+        grid: Grid,
+        height: float,
+        compartment: (typing.Literal["default"] | Part | None) = "default",
+        stacking_lip: (typing.Literal["default"] | Part | None) = "default",
+        **kwargs,
+    ):
 
         with BuildPart() as p:
             # Base
@@ -47,13 +42,12 @@ class Bin(BasePartObject):
             # Body
             with Locations((0, 0, base_height)):
                 extrude(
-                    GridSketch(grid, inset=0.25),
-                    amount=height - base_height
+                    GridSketch(grid, inset=0.25), amount=height - base_height
                 )
 
             if compartment is not None:
                 if isinstance(compartment, str):
-                    compartment = Compartment(grid, height-7)
+                    compartment = Compartment(grid, height - 7)
                 with Locations((0, 0, height)):
                     add(compartment, mode=Mode.SUBTRACT)
 
@@ -72,7 +66,7 @@ class Base(BasePartObject):
         d = [2.15, 1.8, 0.8]
         with BuildPart() as base:
             with BuildSketch(Plane.XY.offset(sum(d))):
-                r = Rectangle(42-0.5, 42-0.5)
+                r = Rectangle(42 - 0.5, 42 - 0.5)
                 fillet(r.vertices(), radius=3.75)
 
             extrude(amount=-d[0], taper=45)
@@ -88,13 +82,15 @@ class Base(BasePartObject):
 
 
 class Compartment(BasePartObject):
-    def __init__(self,
-                 grid: Grid,
-                 height: float,
-                 wall_thickness=1.0,
-                 mode=Mode.PRIVATE,
-                 ** kwargs):
-        grid_sketch = GridSketch(grid, inset=0.25+wall_thickness)
+    def __init__(
+        self,
+        grid: Grid,
+        height: float,
+        wall_thickness=1.0,
+        mode=Mode.PRIVATE,
+        **kwargs,
+    ):
+        grid_sketch = GridSketch(grid, inset=0.25 + wall_thickness)
         with BuildPart() as p:
             extrude(grid_sketch, amount=-height)
             fillet(faces_xy(p)[0].edges(), radius=1)
@@ -104,11 +100,9 @@ class Compartment(BasePartObject):
 
 
 class StackingLip(BasePartObject):
-    def __init__(self,
-                 grid: Grid,
-                 with_support=False,
-                 mode=Mode.PRIVATE,
-                 **kwargs):
+    def __init__(
+        self, grid: Grid, with_support=False, mode=Mode.PRIVATE, **kwargs
+    ):
         grid_sketch = GridSketch(grid, inset=0.25)
         d0, d1, d2 = 1.9, 1.8, 0.7  # lip dimensions
         d3, d4 = 1.2, d0 + d2  # support dimension
@@ -121,10 +115,10 @@ class StackingLip(BasePartObject):
             extrude(faces_xy(n)[0], amount=d4, taper=-45)
 
         with BuildPart() as p:
-            extrude(grid_sketch, amount=d0+d1+d2)
+            extrude(grid_sketch, amount=d0 + d1 + d2)
             if with_support:
-                extrude(grid_sketch, amount=-d3-d4)
-            with Locations((0, 0, d0+d1+d2)):
+                extrude(grid_sketch, amount=-d3 - d4)
+            with Locations((0, 0, d0 + d1 + d2)):
                 add(n, mode=Mode.SUBTRACT)
             fillet(p.edges().group_by(Axis.Z)[-1], radius=0.6)
 
@@ -133,17 +127,15 @@ class StackingLip(BasePartObject):
 
 
 class GridSketch(BaseSketchObject):
-    def __init__(self,
-                 grid:  Grid,
-                 inset: float = 0,
-                 with_fillet=True,
-                 **kwargs):
+    def __init__(
+        self, grid: Grid, inset: float = 0, with_fillet=True, **kwargs
+    ):
         with BuildSketch(Plane.XY) as s:
             with IrregularGridLocations(42, 42, grid):
                 Rectangle(42, 42)
             offset(amount=-inset, kind=Kind.INTERSECTION)
             if with_fillet:
-                fillet(s.vertices(), radius=4-inset)
+                fillet(s.vertices(), radius=4 - inset)
 
         # the fillet operation above always creates a face with a
         # single Wire even when holes are present, let's fix that:

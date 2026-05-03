@@ -7,7 +7,7 @@ from build123d import (
     Locations,
     Plane,
     Vector,
-    to_align_offset
+    to_align_offset,
 )
 
 from .types import Grid
@@ -25,8 +25,12 @@ class IrregularGridLocations(Locations):
         grid: Grid,
         align: Align | tuple[Align, Align] = (Align.CENTER, Align.CENTER),
     ):
-        indices = [(i, j) for i, row in enumerate(grid)
-                   for j, val in enumerate(row) if val]
+        indices = [
+            (i, j)
+            for i, row in enumerate(grid)
+            for j, val in enumerate(row)
+            if val
+        ]
 
         n_rows = max(i for i, j in indices) + 1
         n_cols = max(j for i, j in indices) + 1
@@ -35,9 +39,10 @@ class IrregularGridLocations(Locations):
         align_offset = to_align_offset((0, 0), size, align)
 
         locations = [
-            Location(align_offset + Vector(
-                j * x_spacing, (n_rows-i-1) * y_spacing
-            ))
+            Location(
+                align_offset
+                + Vector(j * x_spacing, (n_rows - i - 1) * y_spacing)
+            )
             for i, j in indices
         ]
 

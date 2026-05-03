@@ -1,8 +1,13 @@
-from .main import Bin, Base, Compartment, StackingLip, GridSketch
-from . import extra
-from . import types
-from . import utils
+from . import extra, types, utils
+from .main import Base, Bin, Compartment, GridSketch, StackingLip
+
 __all__ = [
-    "Bin", "Base", "Compartment", "StackingLip", "GridSketch",
-    "extra", "types", "utils"
+    "Bin",
+    "Base",
+    "Compartment",
+    "StackingLip",
+    "GridSketch",
+    "extra",
+    "types",
+    "utils",
 ]

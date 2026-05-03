@@ -3,3 +3,9 @@ name = "gridfinity"
 version = "1.0.0"
 license = {text = "MIT"}
 dependencies = ["build123d==0.10.0"]
+
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.lint]
+extend-select = ["I", "B"]
