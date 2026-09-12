@@ -7,6 +7,10 @@ dependencies = ["build123d==0.10.0"]
 [dependency-groups]
 dev = [
     "ocp-vscode>=3.3.4",
+    "pytest>=9.1.1",
+    "sphinx>=9.1.0",
+    "sphinx-design>=0.7.0",
+    "sphinx-rtd-theme>=3.1.0",
 ]
 
 [tool.ruff]
@@ -14,3 +18,10 @@ line-length = 79
 
 [tool.ruff.lint]
 extend-select = ["I", "B"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "."]
+testpaths = ["tests"]
+
+[tool.uv]
+package = true
