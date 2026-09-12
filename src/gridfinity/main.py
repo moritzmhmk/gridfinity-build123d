@@ -108,6 +108,38 @@ class Base(BasePartObject):
         super().__init__(part=p.part, **kwargs)
 
 
+class Baseplate(BasePartObject):
+    """A plate of sockets that the feet of a bin drop into.
+
+    The socket profile mirrors the bin foot, with a 0.7 mm bottom chamfer
+    against the foot's 0.8 mm, which is what provides the fit clearance. The
+    plate is 4.65 mm tall regardless of the grid pitch.
+
+    Args:
+        grid: Rows of booleans describing which cells are occupied.
+        spec: Grid pitch and height unit. Defaults to standard Gridfinity.
+    """
+
+    def __init__(self, grid: Grid, spec: GridSpec = DEFAULT, **kwargs):
+        d = [2.15, 1.8, 0.7]  # socket profile, top to bottom
+        with BuildPart() as socket:
+            with BuildSketch(Plane.XY.offset(sum(d))):
+                r = Rectangle(spec.size - 0.5, spec.size - 0.5)
+                fillet(r.vertices(), radius=3.75)
+
+            extrude(amount=-d[0], taper=45)
+            extrude(faces_xy(socket)[0], amount=d[1])
+            extrude(faces_xy(socket)[0], amount=d[2], taper=45)
+
+        with BuildPart() as p:
+            extrude(GridSketch(grid, spec=spec), amount=sum(d))
+            with IrregularGridLocations(spec.size, spec.size, grid):
+                add(socket, mode=Mode.SUBTRACT)
+
+        assert p.part is not None
+        super().__init__(part=p.part, **kwargs)
+
+
 class Compartment(BasePartObject):
     """A plain cavity to subtract from a bin body.
 
