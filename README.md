@@ -100,7 +100,6 @@ baseplate = gf.Baseplate(grid=[
 ```
 
 ![Baseplate](./images/baseplate@light.svg#gh-light-mode-only)
-![Baseplate](./images/baseplate@dark.svg#gh-dark-mode-only)
 
 The plate is 4.65 mm tall: a 2.15 mm chamfer, 1.8 mm of vertical wall and a
 0.7 mm bottom chamfer, per the [Gridfinity specification](https://gridfinity.xyz/specification/).
@@ -151,6 +150,11 @@ Of course, it is still possible to add screw holes directly to the design with t
 
 # Non-standard grid sizes
 
+**Note:**  
+**Parts built on a non-standard pitch do not interoperate with standard 42 mm
+Gridfinity.**  
+They are consistent with each other, and with nothing else.
+
 Gridfinity is defined on a 42 mm grid in x and y, with a 7 mm height unit `U`.
 Both are defaults in this library rather than constants. `gf.GridSpec` carries
 them, and every component accepts one:
@@ -176,8 +180,15 @@ height unit is written by multiplying: `gf.GridSpec(size=61.5, unit=0.75 * 7)`.
 Only the pitch and the height unit scale. Wall thickness, fillet radii, the base
 and stacking-lip profiles, the 4.65 mm baseplate height, scoop radius and label
 dimensions stay absolute, because they are fixed by the standard and by what a
-printer can produce. A bin at 61.5 mm has the same walls and the same corners as
+printer can produce.  A bin at 61.5 mm has the same walls and the same corners as
 one at 42 mm; only its footprint changes.
 
-**Parts built on a non-standard pitch do not interoperate with standard 42 mm
-Gridfinity.** They are consistent with each other, and with nothing else.
+**Verification**: As a test, a grid=61.5 mm 1x1x7U bin and baseplate were printed in somewhat non-dry PETG. The bin has a label at the top end and scoops left and right.
+
+|Characteristic| Width | Depth | Height | Wall|
+| --- | --- | --- | --- | --- |
+| Design |61.5 - 0.5 | 61.5 - 0.5  | 7 x 7 + 4.65 + 4.4 - ~0.5 | 2,6 |
+| OCP  | 61|61  | 56.7 + 0.3 |2.6  |
+| Printed | 60.90 | 61.14 | 57.33 | 2.6 |
+
+

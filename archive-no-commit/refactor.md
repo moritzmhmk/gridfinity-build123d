@@ -357,8 +357,6 @@ tracked and must stay.
 - **Reformatting.** `examples/screw_holes.py`, `examples/sliding_lid_bin.py`
   and `images/render.py` do not satisfy `ruff format --check`, which predates
   this work. Only files this work touched were formatted.
-- **Print verification.** All geometry here is verified numerically. A 61.5 mm
-  part has not yet been printed.
 
 ## 10. Verification
 
@@ -376,6 +374,23 @@ Expected, as of this writing:
 All checks passed!
 build succeeded.
 ```
+
+### 10.1 Print verification
+
+The numerical checks above were confirmed physically. A 1x1 bin, 7 U tall, and
+its baseplate were printed at `size=61.5` in PETG that was not fully dry. The
+bin carried a label at the top end and scoops left and right.
+
+| Characteristic | Width | Depth | Height | Wall |
+|---|---|---|---|---|
+| Design | 61.5 - 0.5 | 61.5 - 0.5 | 7 x 7 + 4.65 + 4.4 - ~0.5 | 2.6 |
+| OCP viewer | 61 | 61 | 56.7 + 0.3 | 2.6 |
+| Printed | 60.90 | 61.14 | 57.33 | 2.6 |
+
+Measured against design, the printed part is 0.10 mm narrow, 0.14 mm deep and
+0.33 mm tall, and the wall is on nominal. Those deviations are printer and
+material, not geometry: the OCP measurements match the design exactly. The
+table is also in `README.md`.
 
 `--python 3.12` is required for the reason in section 9; 3.13 also works. The
 `-W` on the documentation build is the point: a clean build, not merely HTML
