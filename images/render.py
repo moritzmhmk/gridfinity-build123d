@@ -1,11 +1,40 @@
-"""Examples for the README.md file."""
+"""Examples for the README.md file.
+
+Run from the repository root::
+
+    uv run images/render.py
+"""
 
 import math
+import os
+import sys
+from pathlib import Path
 
-import build123d as bd
-from build123d import RGB, Compound, Edge, ExportSVG, Location, ShapeList, Text
+sys.path.insert(0, str(Path(__file__).parents[1] / "src"))
 
-import gridfinity as gf
+import build123d as bd  # noqa: E402
+from build123d import (  # noqa: E402
+    RGB,
+    Compound,
+    Edge,
+    ExportSVG,
+    Location,
+    ShapeList,
+    Text,
+)
+
+import gridfinity as gf  # noqa: E402
+
+# FiraCode Light where it is installed, the platform default font otherwise.
+FONT_CANDIDATES = [
+    "/Users/moritz/Library/Fonts/FiraCode-Light.ttf",
+    str(Path.home() / "AppData/Local/Microsoft/Windows/Fonts/FiraCode-Light.ttf"),
+    "C:/Windows/Fonts/FiraCode-Light.ttf",
+    str(Path.home() / ".local/share/fonts/FiraCode-Light.ttf"),
+]
+FONT = next(
+    ({"font_path": p} for p in FONT_CANDIDATES if os.path.exists(p)), {}
+)
 
 
 def render(part: Compound) -> tuple[ShapeList[Edge], ShapeList[Edge]]:
@@ -116,13 +145,12 @@ compound = Compound([
     grid_sketch,
     stacking_lip.moved(Location((42, 42, 0)))
 ])
-font_path = "/Users/moritz/Library/Fonts/FiraCode-Light.ttf"
 text = ShapeList([
-    Text("Base", 5, font_path=font_path)
+    Text("Base", 5, **FONT)
     .moved(Location((-math.sqrt(2*42**2), -22, 0))),
-    Text("GridSketch", 5, font_path=font_path)
+    Text("GridSketch", 5, **FONT)
     .moved(Location((0, -22, 0))),
-    Text("StackingLip", 5, font_path=font_path)
+    Text("StackingLip", 5, **FONT)
     .moved(Location((math.sqrt(2*42**2), -22, 0)))
 ])
 export(*render(compound), text, 200, "gf-parts")
