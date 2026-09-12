@@ -18,11 +18,34 @@ from build123d import (
 )
 
 from .main import Grid, GridSketch
+from .spec import DEFAULT, GridSpec
 
 Sides = Literal["front", "back", "left", "right"]
 
 
 class SubdividedCompartment(BasePartObject):
+    """A compartment divided into equal sections, with labels and scoops.
+
+    The part is built downwards from the origin, so it is positioned by its
+    top face.
+
+    Args:
+        grid: Rows of booleans describing which cells are occupied.
+        height: Depth of the cavity in mm.
+        div_x: Number of sections in x.
+        div_y: Number of sections in y.
+        div_cutout_width: Width of the cutout through each divider, in mm.
+            Zero leaves the dividers solid.
+        div_cutout_height: Height of that cutout, in mm.
+        with_label: Add a label overhang along the front edge.
+        scoops: Sides to add a scoop to.
+        scoop_radius: Scoop radius in mm. Absolute, not a height unit.
+        wall_thickness: Wall left between the cavity and the outside of the
+            bin, in mm.
+        mode: build123d combination mode.
+        spec: Grid pitch and height unit. Defaults to standard Gridfinity.
+    """
+
     def __init__(
         self,
         grid: Grid,
@@ -36,10 +59,14 @@ class SubdividedCompartment(BasePartObject):
         scoop_radius: float = 7.0,
         wall_thickness=1.0,
         mode=Mode.PRIVATE,
+        spec: GridSpec = DEFAULT,
         **kwargs,
     ):
         grid_sketch = GridSketch(
-            grid, inset=0.25 + wall_thickness, with_fillet=False
+            grid,
+            inset=0.25 + wall_thickness,
+            with_fillet=False,
+            spec=spec,
         )
         size = grid_sketch.bounding_box().size
 

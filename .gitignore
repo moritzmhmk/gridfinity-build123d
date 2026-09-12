@@ -2,5 +2,17 @@
 *.egg-info
 __pycache__
 .mypy_cache
+.pytest_cache
+.ruff_cache
 
 .DS_Store
+Thumbs.db
+
+docs/build/
+docs/source/assets/
+
+archive-no-commit/
+
+# STLs exported by the example scripts into the working directory.
+# Deliberately root-only: examples/PA-09_storage/PA-09_storage.stl is tracked.
+/*.stl
