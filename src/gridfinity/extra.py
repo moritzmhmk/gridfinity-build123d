@@ -88,21 +88,21 @@ class SubdividedCompartment(BasePartObject):
                 if with_label:
                     # Label Cutout
                     with (
-                        BuildSketch(Plane.XZ.offset(-size.Y / 2)) as s,
-                        Locations((size.X / 2, 0, 0)),
+                        BuildSketch(Plane.YZ.offset(-size.X / 2)) as s,
+                        Locations((size.Y / 2, 0, 0)),
                     ):
                         _w = 14
                         # 1:0.7 equals about 55 degrees overhang
                         _h = min(_w * 0.7, height - 2.2)
                         Polygon((0, 0), (-_w, 0), (0, -_h), align=None)
                         fillet(s.vertices().sort_by(Axis.X)[0], radius=0.6)
-                    extrude(amount=size.Y)
+                    extrude(amount=size.X)
 
             wall_inset = -(1.8 + 0.8 - wall_thickness)
             sides = [] if scoops is None else set(scoops)
             for side in sides:
-                axis = "x" if side == "front" or side == "back" else "y"
-                group_index = 0 if side == "back" or side == "right" else -1
+                axis = "x" if side == "left" or side == "right" else "y"
+                group_index = 0 if side == "front" or side == "left" else -1
                 face_filter = Plane.YZ if axis == "x" else Plane.XZ
                 edge_filter = Axis.Y if axis == "x" else Axis.X
                 group_axis = Axis.X if axis == "x" else Axis.Y
