@@ -20,7 +20,7 @@ from ocp_vscode import show
 
 import gridfinity as gf
 
-grid = [[True] * 2] * 5
+grid = gf.Grid.filled(2, 5)
 height = 3 * 7
 
 outline_file = os.path.join(

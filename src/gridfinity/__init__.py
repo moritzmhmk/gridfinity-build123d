@@ -1,13 +1,15 @@
-from . import extra, types, utils
+from . import extra, utils
 from .main import Base, Bin, Compartment, GridSketch, StackingLip
+from .types import Grid
 
 __all__ = [
-    "Bin",
     "Base",
+    "Bin",
     "Compartment",
-    "StackingLip",
+    "Grid",
     "GridSketch",
+    "StackingLip",
     "extra",
-    "types",
+
     "utils",
 ]

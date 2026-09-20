@@ -3,7 +3,7 @@ from ocp_vscode import show
 import gridfinity as gf
 
 # A basic 1x1 bin
-grid_1x1 = [[True]]
+grid_1x1 = gf.Grid([[True]])
 bin_1x1 = gf.Bin(grid=grid_1x1, height=3 * 7)
 show(bin_1x1)
 
@@ -63,25 +63,25 @@ show(bin_1x1_div2x2_scoop_label)
 
 
 # A simple 3x5 bin
-grid_3x5 = [
+grid_3x5 = gf.Grid([
     [True, True, True],
     [True, True, True],
     [True, True, True],
     [True, True, True],
     [True, True, True],
-]
-# alternative notation: grid_3x5 = [[True]*3] * 5
+])
+# alternative notation: grid_3x5 = gf.Grid.filled(3, 5)
 bin_3x5 = gf.Bin(grid=grid_3x5, height=3 * 7)
 show(bin_3x5)
 
 # An irregularly shaped bin
-grid_g_shaped = [
+grid_g_shaped = gf.Grid([
     [True, True, True],
     [True, False, True],
     [True, True, True],
     [False, False, True],
     [True, True, True],
-]
+])
 bin_g_shaped = gf.Bin(grid=grid_g_shaped, height=3 * 7)
 show(bin_g_shaped)
 

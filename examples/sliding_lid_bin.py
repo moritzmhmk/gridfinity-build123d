@@ -19,10 +19,8 @@ from build123d import (
     offset,
 )
 
-from gridfinity import Bin
+from gridfinity import Bin, Grid, GridSketch, StackingLip
 from gridfinity.extra import SubdividedCompartment
-from gridfinity.main import GridSketch, StackingLip
-from gridfinity.types import Grid
 
 
 class InnerLid(BasePartObject):
@@ -165,7 +163,7 @@ if __name__ == "__main__":
 
     lid_thickness = 0.6 + 0.1 * 2
     with BuildPart() as bin:
-        grid = [[True] * args.grid[0]] * args.grid[1]
+        grid = Grid.filled(args.grid[0], args.grid[1])
         height = args.height * 7
         Bin(
             grid,

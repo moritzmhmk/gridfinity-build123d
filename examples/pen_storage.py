@@ -18,7 +18,7 @@ from ocp_vscode import show
 import gridfinity as gf
 from gridfinity.main import GridSketch
 
-grid = [[True] * 2] * 3
+grid = gf.Grid.filled(2, 3)
 height = 4 * 7
 
 grid_sketch = GridSketch(grid, inset=1.25)

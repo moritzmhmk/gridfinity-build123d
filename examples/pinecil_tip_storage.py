@@ -19,7 +19,7 @@ from ocp_vscode import show
 import gridfinity as gf
 from gridfinity.main import GridSketch
 
-grid = [[True] * 1] * 3
+grid = gf.Grid.filled(1, 3)
 height = 3 * 7
 
 with BuildPart(Plane.XZ) as tips:

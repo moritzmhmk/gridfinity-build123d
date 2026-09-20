@@ -143,11 +143,12 @@ class GridSketch(BaseSketchObject):
         **kwargs,
     ):
         with BuildSketch(Plane.XY) as s:
-            with IrregularGridLocations(42, 42, grid):
+            with IrregularGridLocations(grid):
+                w,h = grid.cell_size
                 if separate:
-                    Rectangle(42 - inset * 2, 42 - inset * 2)
+                    Rectangle(w - inset * 2, h - inset * 2)
                 else:
-                    Rectangle(42, 42)
+                    Rectangle(w, h)
 
             if not separate:
                 offset(amount=-inset, kind=Kind.INTERSECTION)

@@ -63,10 +63,10 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    grid = [[True] * args.grid[0]] * args.grid[1]
+    grid = gf.Grid.filled(args.grid[0], args.grid[1])
 
     with BuildPart() as p:
-        with gf.utils.IrregularGridLocations(42, 42, grid):
+        with gf.utils.IrregularGridLocations(grid):
             with GridLocations(26, 26, 2, 2):
                 ScrewHole()
 

@@ -18,7 +18,7 @@ from ocp_vscode import show
 
 import gridfinity as gf
 
-grid = [[True] * 1] * 3
+grid = gf.Grid.filled(1, 3)
 height = 3 * 7
 
 

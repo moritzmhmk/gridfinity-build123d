@@ -20,14 +20,12 @@ def faces_xy(p: BuildPart) -> list[Face]:
 class IrregularGridLocations(Locations):
     def __init__(
         self,
-        x_spacing: float,
-        y_spacing: float,
         grid: Grid,
         align: Align | tuple[Align, Align] = (Align.CENTER, Align.CENTER),
     ):
         indices = [
             (i, j)
-            for i, row in enumerate(grid)
+            for i, row in enumerate(grid.cells)
             for j, val in enumerate(row)
             if val
         ]
@@ -35,13 +33,13 @@ class IrregularGridLocations(Locations):
         n_rows = max(i for i, j in indices) + 1
         n_cols = max(j for i, j in indices) + 1
 
-        size = [x_spacing * (n_cols - 1), y_spacing * (n_rows - 1)]
+        size = [grid.cell_size[0] * (n_cols - 1), grid.cell_size[1] * (n_rows - 1)]
         align_offset = to_align_offset((0, 0), size, align)
 
         locations = [
             Location(
                 align_offset
-                + Vector(j * x_spacing, (n_rows - i - 1) * y_spacing)
+                + Vector(j * grid.cell_size[0], (n_rows - i - 1) * grid.cell_size[1])
             )
             for i, j in indices
         ]

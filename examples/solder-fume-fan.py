@@ -20,8 +20,7 @@ from build123d import (
 from ocp_vscode import show
 
 from examples.sliding_lid_bin import BinSubstraction, Lid
-from gridfinity import Bin
-from gridfinity.main import GridSketch
+from gridfinity import Bin, Grid, GridSketch
 
 with BuildPart() as funnel:
     with BuildSketch():
@@ -42,8 +41,10 @@ with BuildPart() as usb_pd:
 
 show(usb_pd)
 
+grid = Grid.filled(1, 1)
+
 with BuildPart() as compartment:
-    grid_sketch = GridSketch([[True]], inset=0.25 + 1.0)
+    grid_sketch = GridSketch(grid, inset=0.25 + 1.0)
     extrude(grid_sketch, -12)
 
     with BuildSketch(Plane.XY.offset(-12)) as grill_sketch:
@@ -61,7 +62,7 @@ with BuildPart() as compartment:
     extrude(amount=-1)
 
     with Locations((0, 0, -13)):
-        grid_sketch = GridSketch([[True]])
+        grid_sketch = GridSketch(grid)
         extrude(grid_sketch, -10)
 
     with Locations((0, 0, -23)):
@@ -81,7 +82,6 @@ show(compartment)
 
 lid_thickness = 0.6 + 0.1 * 2
 with BuildPart() as bin:
-    grid = [[True]]
     height = 6 * 7
     Bin(grid, height=height, compartment=compartment.part)
     BinSubstraction(grid, bin_height=height, thickness=lid_thickness)

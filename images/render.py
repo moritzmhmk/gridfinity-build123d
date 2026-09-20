@@ -54,11 +54,11 @@ def export(
 
 
 # Example 1
-bin = gf.Bin(grid=[[True]], height=3*7)
+bin = gf.Bin(grid=gf.Grid.filled(1,1), height=3*7)
 export(*render(bin), None, 50, "basic-bin")
 
 # Example 2
-grid = [[True]]
+grid = gf.Grid.filled(1,1)
 compartment = gf.extra.SubdividedCompartment(
     grid,  # use same grid
     height=3*7-7,  # usually height of bin minus 1 unit
@@ -80,20 +80,20 @@ compound = Compound([
 export(*render(compound), None, 100, "subdivided-bin")
 
 # Example 3
-grid_g = [
+grid_g = gf.Grid([
     [True, True, True],
     [True, False, True],
     [True, True, True],
     [False, False, True],
     [True, True, True],
-]
-grid_f = [
+])
+grid_f = gf.Grid([
     [True, True, True],
     [True],
     [True, True],
     [True],
     [True],
-]
+])
 bin_g = gf.Bin(grid=grid_g, height=3*7)
 bin_f = gf.Bin(grid=grid_f, height=3*7)
 
@@ -105,7 +105,7 @@ export(*render(compound), None, 200, "shaped-bins")
 
 
 # Example 4.1
-grid = [[True]]
+grid = gf.Grid.filled(1,1)
 height = 3*7
 base = gf.Base(grid=grid)
 grid_sketch = bd.extrude(gf.GridSketch(grid, inset=0.25), 7)
@@ -128,7 +128,7 @@ text = ShapeList([
 export(*render(compound), text, 200, "gf-parts")
 
 # Example 4.2
-grid = [[True], [True, True]]
+grid = gf.Grid([[True], [True, True]])
 base = gf.Base(grid=grid)
 grid_sketch = bd.extrude(gf.GridSketch(grid, inset=0.25), 7)
 stacking_lip = gf.StackingLip(grid=grid)

@@ -18,7 +18,7 @@ from ocp_vscode import show
 import gridfinity as gf
 from gridfinity.main import GridSketch
 
-grid = [[True] * 1] * 4
+grid = gf.Grid.filled(1,4)
 height = 4 * 7
 
 with BuildPart(Plane.XZ) as ss03:
