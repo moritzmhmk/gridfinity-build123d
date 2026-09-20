@@ -6,8 +6,10 @@ from build123d import (
     BaseSketchObject,
     BuildPart,
     BuildSketch,
+    Compound,
     Face,
     Kind,
+    Location,
     Locations,
     Mode,
     Part,
@@ -64,18 +66,23 @@ class Bin(BasePartObject):
 class Base(BasePartObject):
     def __init__(self, grid: Grid, **kwargs):
         d = [2.15, 1.8, 0.8]
-        with BuildPart() as base:
-            with BuildSketch(Plane.XY.offset(sum(d))):
-                r = Rectangle(42 - 0.5, 42 - 0.5)
-                fillet(r.vertices(), radius=3.75)
-
-            extrude(amount=-d[0], taper=45)
-            extrude(faces_xy(base)[0], amount=d[1])
-            extrude(faces_xy(base)[0], amount=d[2], taper=45)
-
         with BuildPart() as p:
-            with IrregularGridLocations(42, 42, grid):
-                add(base)
+            grid_sketch = GridSketch(grid, inset=0.25, separate=True)
+
+            extrude(
+                grid_sketch.moved(Location((0, 0, sum(d)))),
+                amount=-d[0],
+                taper=45,
+            )
+            extrude(
+                p.faces().filter_by(Plane.XY).group_by(Axis.Z)[0],
+                amount=d[1],
+            )
+            extrude(
+                p.faces().filter_by(Plane.XY).group_by(Axis.Z)[0],
+                amount=d[2],
+                taper=45,
+            )
 
         assert p.part is not None
         super().__init__(part=p.part, **kwargs)
@@ -128,18 +135,31 @@ class StackingLip(BasePartObject):
 
 class GridSketch(BaseSketchObject):
     def __init__(
-        self, grid: Grid, inset: float = 0, with_fillet=True, **kwargs
+        self,
+        grid: Grid,
+        inset: float = 0,
+        with_fillet=True,
+        separate=False,
+        **kwargs,
     ):
         with BuildSketch(Plane.XY) as s:
             with IrregularGridLocations(42, 42, grid):
-                Rectangle(42, 42)
-            offset(amount=-inset, kind=Kind.INTERSECTION)
+                if separate:
+                    Rectangle(42 - inset * 2, 42 - inset * 2)
+                else:
+                    Rectangle(42, 42)
+
+            if not separate:
+                offset(amount=-inset, kind=Kind.INTERSECTION)
+
             if with_fillet:
                 fillet(s.vertices(), radius=4 - inset)
 
         # the fillet operation above always creates a face with a
         # single Wire even when holes are present, let's fix that:
-        wires = Wire.combine(s.edges())
-        f = Face(outer_wire=wires[0], inner_wires=wires[1:])
+        faces = []
+        for f in s.faces():
+            wires = Wire.combine(f.edges())
+            faces.append(Face(outer_wire=wires[0], inner_wires=wires[1:]))
 
-        super().__init__(f, **kwargs)
+        super().__init__(Compound(faces), **kwargs)
