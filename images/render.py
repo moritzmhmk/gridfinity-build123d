@@ -62,10 +62,10 @@ grid = [[True]]
 compartment = gf.extra.SubdividedCompartment(
     grid,  # use same grid
     height=3*7-7,  # usually height of bin minus 1 unit
-    div_x=1,
-    div_y=2,
+    div_x=2,
+    div_y=1,
     with_label=True,
-    scoops=["back"]
+    scoops=["front"]
 )
 bin = gf.Bin(
     grid=grid,

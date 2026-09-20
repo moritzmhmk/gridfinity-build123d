@@ -53,10 +53,10 @@ bin_1x1_div2x2_scoop_label = gf.Bin(
     compartment=gf.extra.SubdividedCompartment(
         grid_1x1,  # use same grid
         height=3 * 7 - 7,  # usually height of bin minus 1 unit (i.e. 7 mm)
-        div_x=1,
-        div_y=2,
+        div_x=2,
+        div_y=1,
         with_label=True,
-        scoops=["back"],
+        scoops=["front"],
     ),
 )
 show(bin_1x1_div2x2_scoop_label)
@@ -94,7 +94,7 @@ bin_g_shaped_compartment = gf.Bin(
         2 * 7,  # 1 unit (7 mm) smaller [maximum would be 2.3*7]
         div_x=4,
         div_y=4,
-        scoops=["back"],
+        scoops=["front"],
         with_label=True,
     ),
 )
