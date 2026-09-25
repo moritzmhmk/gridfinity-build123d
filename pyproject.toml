@@ -2,7 +2,7 @@
 name = "gridfinity"
 version = "2.0.0b2"
 license = {text = "MIT"}
-dependencies = ["build123d==0.10.0"]
+dependencies = ["build123d>=0.13.0"]
 
 [dependency-groups]
 dev = [

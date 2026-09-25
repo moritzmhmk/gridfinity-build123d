@@ -36,16 +36,17 @@ class Bin(BasePartObject):
         **kwargs,
     ):
 
+        body_sketch = GridSketch(grid, inset=0.25)
         with BuildPart() as p:
             # Base
             base = Base(grid=grid)
             base_height = base.bounding_box().size.Z
 
             # Body
-            with Locations((0, 0, base_height)):
-                extrude(
-                    GridSketch(grid, inset=0.25), amount=height - base_height
-                )
+            extrude(
+                body_sketch.moved(Location((0, 0, base_height))),
+                amount=height - base_height,
+            )
 
             if compartment is not None:
                 if isinstance(compartment, str):
@@ -66,8 +67,8 @@ class Bin(BasePartObject):
 class Base(BasePartObject):
     def __init__(self, grid: Grid, **kwargs):
         d = [2.15, 1.8, 0.8]
+        grid_sketch = GridSketch(grid, inset=0.25, separate=True)
         with BuildPart() as p:
-            grid_sketch = GridSketch(grid, inset=0.25, separate=True)
 
             extrude(
                 grid_sketch.moved(Location((0, 0, sum(d)))),
