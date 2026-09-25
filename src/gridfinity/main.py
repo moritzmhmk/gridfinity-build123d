@@ -43,8 +43,10 @@ class Bin(BasePartObject):
             base_height = base.bounding_box().size.Z
 
             # Body
-            with Locations((0, 0, base_height)):
-                extrude(body_sketch, amount=height - base_height)
+            extrude(
+                body_sketch.moved(Location((0, 0, base_height))),
+                amount=height - base_height,
+            )
 
             if compartment is not None:
                 if isinstance(compartment, str):
