@@ -26,6 +26,37 @@ from .types import Grid
 from .utils import IrregularGridLocations, faces_xy
 
 
+class Baseplate(BasePartObject):
+    def __init__(self, grid: Grid, **kwargs):
+        d = [2.15, 1.8, 0.7]
+        with BuildPart() as sockets:
+            grid_sketch = GridSketch(grid, inset=0.0, separate=True)
+
+            extrude(
+                grid_sketch.moved(Location((0, 0, sum(d)))),
+                amount=-d[0],
+                taper=45,
+            )
+            extrude(
+                sockets.faces().filter_by(Plane.XY).group_by(Axis.Z)[0],
+                amount=d[1],
+            )
+            extrude(
+                sockets.faces().filter_by(Plane.XY).group_by(Axis.Z)[0],
+                amount=d[2],
+                taper=45,
+            )
+
+        with BuildPart() as p:
+            extrude(
+                GridSketch(grid, inset=0.0), amount=sum(d)
+            )
+            add(sockets, mode=Mode.SUBTRACT)
+
+        assert p.part is not None
+        super().__init__(part=p.part, **kwargs)
+
+
 class Bin(BasePartObject):
     def __init__(
         self,
@@ -142,25 +173,44 @@ class GridSketch(BaseSketchObject):
         separate=False,
         **kwargs,
     ):
+        if separate:
+            obj = self._build_separate(grid,inset,with_fillet)
+        else:
+            obj = self._build_combined(grid,inset,with_fillet)
+
+        super().__init__(obj, **kwargs)
+
+    @staticmethod
+    def _build_combined(grid: Grid, inset: float = 0, with_fillet=True):
         with BuildSketch(Plane.XY) as s:
             with IrregularGridLocations(grid):
-                w,h = grid.cell_size
-                if separate:
-                    Rectangle(w - inset * 2, h - inset * 2)
-                else:
-                    Rectangle(w, h)
+                w, h = grid.cell_size
+                Rectangle(w, h)
 
-            if not separate:
-                offset(amount=-inset, kind=Kind.INTERSECTION)
+            offset(amount=-inset, kind=Kind.INTERSECTION)
 
             if with_fillet:
                 fillet(s.vertices(), radius=4 - inset)
 
-        # the fillet operation above always creates a face with a
-        # single Wire even when holes are present, let's fix that:
-        faces = []
-        for f in s.faces():
-            wires = Wire.combine(f.edges())
-            faces.append(Face(outer_wire=wires[0], inner_wires=wires[1:]))
+            # the fillet operation above always creates a face with a
+            # single Wire even when holes are present, let's fix that:
+            wires = Wire.combine(s.edges())
+            return Face(outer_wire=wires[0], inner_wires=wires[1:])
 
-        super().__init__(Compound(faces), **kwargs)
+    @staticmethod
+    def _build_separate(grid: Grid, inset: float = 0, with_fillet=True):
+        with BuildSketch(Plane.XY) as s:
+            w, h = grid.cell_size
+            Rectangle(w - inset * 2, h - inset * 2)
+
+            if with_fillet:
+                fillet(s.vertices(), radius=4 - inset)
+
+        cell = s.faces()[0]
+
+        faces = [
+            cell.located(location)
+            for location in IrregularGridLocations(grid)
+        ]
+
+        return Compound(faces)
