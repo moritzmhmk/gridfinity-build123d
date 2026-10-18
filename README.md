@@ -110,6 +110,16 @@ grid = gf.Grid([[True], [True, True]])
 ![Gridfinity Parts](./images/gf-parts-2@light.svg#gh-light-mode-only)
 ![Gridfinity Parts](./images/gf-parts-2@dark.svg#gh-dark-mode-only)
 
+For custom grids (i.e., grids that don't use the standard 42x42 mm Gridfinity cells), the dimensions can be specified via the `cell_size` argument:
+```python
+...
+grid = gf.Grid([[True], [True, True]], cell_size=(21,42))
+...
+```
+
+![Gridfinity Parts](./images/gf-parts-3@light.svg#gh-light-mode-only)
+![Gridfinity Parts](./images/gf-parts-3@dark.svg#gh-dark-mode-only)
+
 ## Example scripts
 Scripts for the creation of some parametric designs can be found in the [examples](./examples/) folder.
 

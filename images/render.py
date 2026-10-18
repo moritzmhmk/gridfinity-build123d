@@ -147,3 +147,18 @@ compound = Compound(
     ]
 )
 export(*render(compound), None, 200, "gf-parts-2")
+
+# Example 4.3
+grid = gf.Grid([[True], [True, True]], cell_size=(21,42))
+base = gf.Base(grid=grid)
+grid_sketch = bd.extrude(gf.GridSketch(grid, inset=0.25), 7)
+stacking_lip = gf.StackingLip(grid=grid)
+
+compound = Compound(
+    [
+        base.moved(Location((-42 - 21, -42 - 21, 0))),
+        grid_sketch,
+        stacking_lip.moved(Location((42 + 21, 42 + 21, 0))),
+    ]
+)
+export(*render(compound), None, 200, "gf-parts-3")
