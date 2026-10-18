@@ -165,4 +165,4 @@ export(*render(compound), None, 200, "gf-parts-3")
 
 # Example 5
 baseplate = gf.Baseplate(grid=gf.Grid.filled(2, 3))
-export(*render(baseplate), None, 150, "basic-baseplate")
+export(*render(baseplate), None, 100, "basic-baseplate")
