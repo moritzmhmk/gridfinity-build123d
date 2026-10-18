@@ -4,7 +4,8 @@ from build123d import (
     Axis,
     BuildPart,
     export_stl,
-    extrude, fillet,
+    extrude,
+    fillet,
 )
 
 import gridfinity as gf
@@ -69,28 +70,52 @@ if __name__ == "__main__":
             amount = getattr(args, f"padding_{side}")
             if amount is None or amount == 0:
                 continue
-            axis = Axis.X if side == "front" or side == "back" else Axis.Y
-            index = 0 if side == "back" or side == "right" else -1
+            axis = Axis.X if side == "left" or side == "right" else Axis.Y
+            index = 0 if side == "front" or side == "left" else -1
             face = baseplate.faces().sort_by(axis)[index]
             extrude(face, amount)
 
         edges = baseplate.edges().filter_by(Axis.Z)
         bbox = baseplate.part.bounding_box()
         for corner in args.rounded_corners or []:
-            x = bbox.min.X if "right" in corner else bbox.max.X
-            y = bbox.min.Y if "back" in corner else bbox.max.Y
+            x = bbox.min.X if "left" in corner else bbox.max.X
+            y = bbox.min.Y if "front" in corner else bbox.max.Y
             edge = min(
                 edges,
-                key=lambda e: (e.center().X - x) ** 2 + (e.center().Y - y) ** 2,
+                key=lambda e: (
+                    (e.center().X - x) ** 2 + (e.center().Y - y) ** 2
+                ),
             )
             fillet(edge, radius=4)
-
 
     baseplate_name = "baseplate"
     if args.grid_cell_size[0] != 42 or args.grid_cell_size[1] != 42:
         baseplate_name = f"custom-{args.grid_cell_size[0]}x{args.grid_cell_size[1]}-baseplate"
-    filename = f"{baseplate_name}_{args.grid[0]}x{args.grid[1]}"
 
+    padding_str = ""
+    for side in ("left", "right", "front", "back"):
+        padding = getattr(args, f"padding_{side}")
+        if padding:
+            padding_str += f"_pad-{side}-{padding:g}"
+
+    corners_str = ""
+    if set(args.rounded_corners) != {
+        "front-left",
+        "front-right",
+        "back-left",
+        "back-right",
+    }:
+        corners = "-".join(
+            corner.replace("-", "") for corner in sorted(args.rounded_corners)
+        )
+        corners_str = f"_corners-{corners}"
+
+    filename = (
+        f"{baseplate_name}"
+        f"_{args.grid[0]}x{args.grid[1]}"
+        f"{padding_str}"
+        f"{corners_str}"
+    )
     if args.preview:
         from ocp_vscode import (
             show,
@@ -101,4 +126,4 @@ if __name__ == "__main__":
         )
         show(baseplate)
     else:
-        export_stl(baseplate, f"{filename}.stl")
+        export_stl(baseplate.part, f"{filename}.stl")

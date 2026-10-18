@@ -24,6 +24,8 @@ bin = gf.Bin(grid=gf.Grid.filled(1, 1), height=3 * 7)
 ![1x1 Bin](./images/basic-bin@light.svg#gh-light-mode-only)
 ![1x1 Bin](./images/basic-bin@dark.svg#gh-dark-mode-only)
 
+For quickly generating custom bins from the command line, use `scripts/bin.py`.
+
 ### Compartment
 
 A negative volume can be provided to create a more complex compartment. For some common use cases the `SubdividedCompartment` from the `extra` module can be used.
@@ -133,6 +135,8 @@ baseplate = gf.Baseplate(grid=gf.Grid.filled(2, 3))
 
 ![Gridfinity Parts](./images/basic-baseplate@light.svg#gh-light-mode-only)
 ![Gridfinity Parts](./images/basic-baseplate@dark.svg#gh-dark-mode-only)
+
+For quickly generating custom baseplates from the command line, use `scripts/baseplate.py`.
 
 ## Example scripts
 Scripts for the creation of some parametric designs can be found in the [examples](./examples/) folder.
