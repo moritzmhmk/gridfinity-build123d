@@ -98,7 +98,9 @@ if __name__ == "__main__":
     if args.grid_cell_size[0] != 42 or args.grid_cell_size[1] != 42:
         baseplate_name = f"custom-{args.grid_cell_size[0]}x{args.grid_cell_size[1]}-screw-holes"
 
-    filename = f"{holes_name}_{args.grid[0]}x{args.grid[1]}"
+    bridging_str = "_bridging_support" if args.bridging_support else ""
+
+    filename = f"{holes_name}_{args.grid[0]}x{args.grid[1]}{bridging_str}"
 
     assert p.part is not None
 
