@@ -79,13 +79,21 @@ if __name__ == "__main__":
         help="Radius of the scoop.",
     )
     parser.add_argument(
+        "--grid-cell-size",
+        type=parse_size,
+        default=(42, 42),
+        help="Size of grid cells in format WxH (e.g., 42x42 for standard gridfinity cells)",
+    )
+    parser.add_argument(
         "--preview",
         action="store_true",
     )
 
     args = parser.parse_args()
 
-    grid = gf.Grid.filled(args.grid[0], args.grid[1])
+    grid = gf.Grid.filled(
+        args.grid[0], args.grid[1], cell_size=args.grid_cell_size
+    )
     height = args.height * 7
 
     bin = gf.Bin(
@@ -104,22 +112,29 @@ if __name__ == "__main__":
         ),
     )
 
-    if args.preview:
-        from ocp_vscode import (
-            show,
+    bin_name = "bin"
+    if args.grid_cell_size[0] != 42 or args.grid_cell_size[1] != 42:
+        bin_name = (
+            f"custom-{args.grid_cell_size[0]}x{args.grid_cell_size[1]}-bin"
         )
-
-        show(bin)
-        exit(0)
-
     scoop_str = "-".join(args.scoops) if args.scoops else None
-    export_stl(
-        bin,
-        "bin"
+    filename = (
+        f"{bin_name}"
         f"_{args.grid[0]}x{args.grid[1]}-h{args.height}"
         f"_div{args.div[0]}x{args.div[1]}"
         f"{f'_cutout-w{args.div_cutout_width}-h{args.div_cutout_height}' if args.div_cutout_width else ''}"
         f"{'_label' if args.label else ''}"
         f"{f'_scoop-{scoop_str}' if scoop_str else ''}"
-        ".stl",
     )
+
+    if args.preview:
+        from ocp_vscode import (
+            show,
+        )
+
+        print(
+            f"Showing preview for {filename}. Call without --preview to export."
+        )
+        show(bin)
+    else:
+        export_stl(bin, f"{filename}.stl")

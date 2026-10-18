@@ -31,27 +31,37 @@ if __name__ == "__main__":
         help="Baseplate grid size in format WxH (e.g., 2x3)",
     )
     parser.add_argument(
+        "--grid-cell-size",
+        type=parse_size,
+        default=(42, 42),
+        help="Size of grid cells in format WxH (e.g., 42x42 for standard gridfinity cells)",
+    )
+    parser.add_argument(
         "--preview",
         action="store_true",
     )
 
     args = parser.parse_args()
 
-    grid = gf.Grid.filled(args.grid[0], args.grid[1])
+    grid = gf.Grid.filled(
+        args.grid[0], args.grid[1], cell_size=args.grid_cell_size
+    )
 
     baseplate = gf.Baseplate(grid=grid)
+
+    baseplate_name = "baseplate"
+    if args.grid_cell_size[0] != 42 or args.grid_cell_size[1] != 42:
+        baseplate_name = f"custom-{args.grid_cell_size[0]}x{args.grid_cell_size[1]}-baseplate"
+    filename = f"{baseplate_name}_{args.grid[0]}x{args.grid[1]}"
 
     if args.preview:
         from ocp_vscode import (
             show,
         )
 
+        print(
+            f"Showing preview for {filename}. Call without --preview to export."
+        )
         show(baseplate)
-        exit(0)
-
-    export_stl(
-        baseplate,
-        "baseplate"
-        f"_{args.grid[0]}x{args.grid[1]}"
-        ".stl",
-    )
+    else:
+        export_stl(baseplate, f"{filename}.stl")
