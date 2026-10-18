@@ -18,7 +18,7 @@ For simple designs the `Bin` component can be used.
 import gridfinity as gf
 
 # A simple 1x1 bin with a height of 3 units
-bin = gf.Bin(grid=[[True]], height=3*7)
+bin = gf.Bin(grid=gf.Grid.filled(1, 1), height=3 * 7)
 ```
 
 ![1x1 Bin](./images/basic-bin@light.svg#gh-light-mode-only)
@@ -32,20 +32,16 @@ A negative volume can be provided to create a more complex compartment. For some
 import gridfinity as gf
 
 # A 1x1 bin with a subdivided compartment with scoop and label
-grid = [[True]]
+grid = gf.Grid.filled(1, 1)
 compartment = gf.extra.SubdividedCompartment(
     grid,  # use same grid
-    height=3*7-7,  # usually height of bin minus 1 unit
+    height=3 * 7 - 7,  # usually height of bin minus 1 unit
     div_x=2,
     div_y=1,
     with_label=True,
-    scoops=["front"]
+    scoops=["front"],
 )
-bin = gf.Bin(
-    grid=grid,
-    height=3*7,
-    compartment=compartment
-)
+bin = gf.Bin(grid=grid, height=3 * 7, compartment=compartment)
 ```
 
 ![Negative volume and bin with compartment](./images/subdivided-bin@light.svg#gh-light-mode-only)
@@ -60,22 +56,26 @@ The library allows for the definition of arbitrary shapes via the grid layout.
 import gridfinity as gf
 
 # Two odly shaped bins
-grid_g = [
-    [True, True, True],
-    [True, False, True],
-    [True, True, True],
-    [False, False, True],
-    [True, True, True],
-]
-grid_f = [
-    [True, True, True],
-    [True],
-    [True, True],
-    [True],
-    [True],
-]
-bin_g = gf.Bin(grid=grid_g, height=3*7)
-bin_f = gf.Bin(grid=grid_f, height=3*7)
+grid_g = gf.Grid(
+    [
+        [True, True, True],
+        [True, False, True],
+        [True, True, True],
+        [False, False, True],
+        [True, True, True],
+    ]
+)
+grid_f = gf.Grid(
+    [
+        [True, True, True],
+        [True],
+        [True, True],
+        [True],
+        [True],
+    ]
+)
+bin_g = gf.Bin(grid=grid_g, height=3 * 7)
+bin_f = gf.Bin(grid=grid_f, height=3 * 7)
 ```
 
 ![Bins with irregular shape](./images/shaped-bins@light.svg#gh-light-mode-only)
@@ -90,8 +90,7 @@ For more complex use cases creating a custom component from the building blocks 
 import build123d as bd
 import gridfinity as gf
 
-grid = [[True]]
-height = 3*7
+grid = gf.Grid.filled(1, 1)
 base = gf.Base(grid=grid)
 grid_sketch = bd.extrude(gf.GridSketch(grid, inset=0.25), 7)
 stacking_lip = gf.StackingLip(grid=grid)
@@ -104,7 +103,7 @@ Every building block has a `grid` argument to define its shape.
 
 ```python
 ...
-grid = [[True], [True, True]]
+grid = gf.Grid([[True], [True, True]])
 ...
 ```
 
