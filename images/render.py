@@ -117,7 +117,7 @@ compound = Compound(
         stacking_lip.moved(Location((42, 42, 0))),
     ]
 )
-font_path = "/Users/moritz/Library/Fonts/FiraCode-Light.ttf"
+font_path = "fonts/FiraCode-Light.ttf"
 text = ShapeList(
     [
         Text("Base", 5, font_path=font_path).moved(
