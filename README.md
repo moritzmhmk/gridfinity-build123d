@@ -9,7 +9,7 @@ pip install git+https://github.com/moritzmhmk/gridfinity-build123d
 ```
 # Usage
 
-## Basic usage
+## Basic bin designs
 For simple designs the `Bin` component can be used.
 
 ### Basic bin
@@ -82,7 +82,7 @@ bin_f = gf.Bin(grid=grid_f, height=3 * 7)
 ![Bins with irregular shape](./images/shaped-bins@dark.svg#gh-dark-mode-only)
 
 
-## Advanced usage
+## Advanced bin designs
 
 For more complex use cases creating a custom component from the building blocks might be necessary.
 
@@ -119,6 +119,20 @@ grid = gf.Grid([[True], [True, True]], cell_size=(21,42))
 
 ![Gridfinity Parts](./images/gf-parts-3@light.svg#gh-light-mode-only)
 ![Gridfinity Parts](./images/gf-parts-3@dark.svg#gh-dark-mode-only)
+
+## Baseplate design
+
+A simple baseplate can be created using the `Baseplate` component.
+
+```python
+import gridfinity as gf
+
+# A simple 2x3 baseplate
+baseplate = gf.Baseplate(grid=gf.Grid.filled(2, 3))
+```
+
+![Gridfinity Parts](./images/basic-baseplate@light.svg#gh-light-mode-only)
+![Gridfinity Parts](./images/basic-baseplate@dark.svg#gh-dark-mode-only)
 
 ## Example scripts
 Scripts for the creation of some parametric designs can be found in the [examples](./examples/) folder.
