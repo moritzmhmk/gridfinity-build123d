@@ -147,6 +147,6 @@ Each design must be published in many variations when holes for screws, magnets 
 
 Possible modifications, e.g. for screws, can then be added in the slicer as a negative volume. Only one such negative volume is required for each grid layout and can be reused for all designs. 
 
-An example of how to create negative volumes for screws can be found in the [examples](./examples/) folder.
+For generating screw-hole negative volumes from the command line, see `scripts/screw_holes.py`.
 
 Of course, it is still possible to add screw holes directly to the design with this library, but it is not recommended and therefore not actively supported.
