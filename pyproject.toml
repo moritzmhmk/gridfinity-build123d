@@ -2,6 +2,7 @@
 name = "gridfinity"
 version = "2.0.0b2"
 license = {text = "MIT"}
+requires-python = ">=3.12"
 dependencies = ["build123d==0.10.0"]
 
 [dependency-groups]
