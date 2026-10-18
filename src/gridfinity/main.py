@@ -174,9 +174,9 @@ class GridSketch(BaseSketchObject):
         **kwargs,
     ):
         if separate:
-            obj = self._build_separate(grid,inset,with_fillet)
+            obj = self._build_separate(grid, inset, with_fillet)
         else:
-            obj = self._build_combined(grid,inset,with_fillet)
+            obj = self._build_combined(grid, inset, with_fillet)
 
         super().__init__(obj, **kwargs)
 
@@ -209,8 +209,7 @@ class GridSketch(BaseSketchObject):
         cell = s.faces()[0]
 
         faces = [
-            cell.located(location)
-            for location in IrregularGridLocations(grid)
+            cell.located(location) for location in IrregularGridLocations(grid)
         ]
 
         return Compound(faces)
