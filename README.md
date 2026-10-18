@@ -122,7 +122,7 @@ grid = gf.Grid([[True], [True, True]], cell_size=(21,42))
 
 ## Baseplate design
 
-A simple baseplate can be created using the `Baseplate` component.
+A simple baseplate can be created using the `Baseplate` component. Set `rounded_corners=False` when tiling multiple baseplates or when extending a baseplate to fill a given space.
 
 ```python
 import gridfinity as gf

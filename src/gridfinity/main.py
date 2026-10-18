@@ -27,7 +27,7 @@ from .utils import IrregularGridLocations, faces_xy
 
 
 class Baseplate(BasePartObject):
-    def __init__(self, grid: Grid, **kwargs):
+    def __init__(self, grid: Grid, rounded_corners: bool = True, **kwargs):
         d = [2.15, 1.8, 0.7]
         with BuildPart() as sockets:
             grid_sketch = GridSketch(grid, inset=0.0, separate=True)
@@ -49,7 +49,8 @@ class Baseplate(BasePartObject):
 
         with BuildPart() as p:
             extrude(
-                GridSketch(grid, inset=0.0), amount=sum(d)
+                GridSketch(grid, inset=0.0, with_fillet=rounded_corners),
+                amount=sum(d),
             )
             add(sockets, mode=Mode.SUBTRACT)
 
